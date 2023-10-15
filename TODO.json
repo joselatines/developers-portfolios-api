@@ -1,0 +1,24 @@
+{
+  "Autenticación": {
+    "Registro": "POST /api/users",
+    "Inicio de sesión": "POST /api/users/login",
+    "Cierre de sesión": "POST /api/users/logout"
+  },
+  "Gestión de portafolios": {
+    "Crear portafolio": "POST /api/portfolios",
+    "Obtener todos los portafolios": "GET /api/portfolios",
+    "Obtener un portafolio específico": "GET /api/portfolios/:id",
+    "Actualizar un portafolio específico": "PUT /api/portfolios/:id",
+    "Eliminar un portafolio específico": "DELETE /api/portfolios/:id"
+  },
+  "Calificaciones": {
+    "Calificar un portafolio": "POST /api/portfolios/:id/ratings",
+    "Obtener todas las calificaciones de un portafolio": "GET /api/portfolios/:id/ratings",
+    "Actualizar una calificación específica": "PUT /api/portfolios/:id/ratings/:ratingId",
+    "Eliminar una calificación específica": "DELETE /api/portfolios/:id/ratings/:ratingId"
+  },
+  "Usuarios": {
+    "Obtener información del perfil del usuario actual": "GET /api/users/me",
+    "Actualizar información del perfil del usuario actual": "PUT /api/users/me"
+  }
+}
