@@ -25,3 +25,10 @@ export function verifyToken(token: string) {
 		return null;
 	}
 }
+
+export function getUserFromToken(authHeader: string) {
+	// authHeader: Bearer a4sdf68a4sf68a4s6df4a6s4df6
+	const token = authHeader.split(" ")[1];
+
+	return verifyToken(token);
+}
