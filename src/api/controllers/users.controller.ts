@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import APIResponse from "../../interfaces/responses/APIResponse";
-import { User } from "../../database/models/user.model";
-import { ICreateUser } from "../../interfaces/users.interface";
+import { User, UserDocument } from "../../database/models/user.model";
 
 export async function getAllUsers(req: Request, res: Response<APIResponse>) {
   try {
@@ -14,7 +13,7 @@ export async function getAllUsers(req: Request, res: Response<APIResponse>) {
 
 export async function createUser(req: Request, res: Response<APIResponse>) {
   try {
-    const user: ICreateUser = req.body;
+    const user: UserDocument = req.body;
     const userCreated = await User.create(user);
     res.status(201).json({ message: "User created", success: true, data: userCreated });
   } catch (error) {

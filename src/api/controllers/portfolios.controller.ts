@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import APIResponse from "../../interfaces/responses/APIResponse";
-import { Portfolio } from "../../database/models/portfolio.model";
-import { ICreatePortfolio } from "../../interfaces/portfolios.interface";
+import { Portfolio, PortfolioDocument } from "../../database/models/portfolio.model";
 import { getUserFromToken } from "../../utils/jwt";
 
 export async function getAllPortfolios(
@@ -40,7 +39,7 @@ export async function createPortfolio(
 				.status(500)
 				.json({ message: "User not on auth header", success: false });
 
-		const portfolio: ICreatePortfolio = {
+		const portfolio: PortfolioDocument = {
 			...req.body,
 			created_by: user.userId,
 		};

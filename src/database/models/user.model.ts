@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { envConfig } from "../../dotenv/config";
 const { ADMIN_ROLE } = envConfig;
 
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
 	username: string;
 	email: string;
 	password: string;

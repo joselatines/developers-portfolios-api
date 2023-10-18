@@ -1,16 +1,20 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { envConfig } from "../../dotenv/config";
-import { IUser } from "../../interfaces/users.interface";
-import {
-	PORTFOLIO_TYPES,
-	PortfolioType,
-} from "../../interfaces/portfolios.interface";
+import { UserDocument } from "./user.model";
+const PORTFOLIO_TYPES = {
+	backend: "backend",
+	frontend: "frontend",
+	fullstack: "fullstack",
+	mobile: "mobile",
+	software: "software",
+} as const;
 
-interface PortfolioDocument extends Document {
+type IPortfolioType = keyof typeof PORTFOLIO_TYPES;
+
+export interface PortfolioDocument extends Document {
 	images: string[];
-	created_by: IUser;
+	created_by: UserDocument;
 	website_link: string;
-	type: PortfolioType;
+	type: IPortfolioType;
 	title: string;
 	description: string;
 }
