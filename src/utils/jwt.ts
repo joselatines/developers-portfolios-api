@@ -19,7 +19,7 @@ export function generateAccessToken(
 export function verifyToken(token: string) {
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET);
-		return decoded;
+		return decoded; // {role: example123, id: example123}
 	} catch (error) {
 		console.error(error);
 		return null;
