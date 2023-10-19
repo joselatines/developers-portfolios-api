@@ -32,7 +32,7 @@ export async function loginController(
 		}
 
 		// Creating a JWT token
-		const token = generateAccessToken({ userId: user._id, role: user.role });
+		const token = generateAccessToken({ id: user._id, role: user.role });
 
 		res.status(200).json({
 			message: "Login successful",

@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import APIResponse from "../../interfaces/responses/APIResponse";
-import { Portfolio, PortfolioDocument } from "../../database/models/portfolio.model";
+import {
+	Portfolio,
+	PortfolioDocument,
+} from "../../database/models/portfolio.model";
 import { getUserFromToken } from "../../utils/jwt";
 
 export async function getAllPortfolios(
@@ -25,12 +28,10 @@ export async function createPortfolio(
 ) {
 	try {
 		if (!req.headers.authorization)
-			return res
-				.status(500)
-				.json({
-					message: "You need to pass a the token to the auth header",
-					success: false,
-				});
+			return res.status(500).json({
+				message: "You need to pass a the token to the auth header",
+				success: false,
+			});
 
 		const user: any = getUserFromToken(req.headers.authorization);
 
@@ -41,7 +42,7 @@ export async function createPortfolio(
 
 		const portfolio: PortfolioDocument = {
 			...req.body,
-			created_by: user.userId,
+			created_by: user.id,
 		};
 
 		const portfolioCreated = await Portfolio.create(portfolio);

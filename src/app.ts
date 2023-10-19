@@ -6,10 +6,11 @@ import cors from "cors";
 import usersRoutes from "./api/routes/users.route";
 import authRoutes from "./api/routes/auth.route";
 import portfoliosRoutes from "./api/routes/portfolios.route";
+import ratingsRoutes from "./api/routes/ratings.route";
 import { errorHandlerMiddleware } from "./api/middlewares/error-handler";
 import { notFoundMiddleware } from "./api/middlewares/not-found";
 import { connectDb } from "./database/connection";
-import { User } from "./database/models/user.model";
+
 require("dotenv").config();
 
 const app = express();
@@ -33,9 +34,10 @@ app.get("/api/v1", (req, res) => {
 	});
 });
 
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", usersRoutes);
 app.use("/api/v1/portfolios", portfoliosRoutes);
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/portfolios/ratings", ratingsRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

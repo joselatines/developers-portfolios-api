@@ -17,6 +17,7 @@ export interface PortfolioDocument extends Document {
 	type: IPortfolioType;
 	title: string;
 	description: string;
+	ratings: any;
 }
 
 const portfolioSchema = new Schema<PortfolioDocument>({
@@ -40,6 +41,7 @@ const portfolioSchema = new Schema<PortfolioDocument>({
 		enum: Object.values(PORTFOLIO_TYPES), // Enforce the type to be one of the specified values
 		default: "frontend",
 	},
+	ratings: [{ type: Schema.Types.ObjectId, ref: "Ratings" }],
 });
 
 export const Portfolio = mongoose.model<PortfolioDocument>(

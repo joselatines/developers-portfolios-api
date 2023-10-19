@@ -3,7 +3,7 @@ import { envConfig } from "../dotenv/config";
 const { JWT_SECRET } = envConfig;
 
 interface IData {
-	userId: string;
+	id: string;
 	role: string;
 }
 
