@@ -16,14 +16,11 @@ export function isAuthenticatedMiddleware(
   const user: any = getUserFromToken(req.headers.authorization);
 
   if (user && user.role === 'user') {
-    console.info('user user...');
     next();
   } else {
-    res
-      .status(403)
-      .json({
-        message: 'You need to authenticate yourself to use this route',
-        success: false,
-      });
+    res.status(403).json({
+      message: 'You need to authenticate yourself to use this route',
+      success: false,
+    });
   }
 }

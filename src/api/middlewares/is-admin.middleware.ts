@@ -16,7 +16,6 @@ export function isAdminMiddleware(
   const user: any = getUserFromToken(req.headers.authorization);
 
   if (user && user.role === 'admin') {
-    console.info('admin user...');
     next();
   } else {
     res

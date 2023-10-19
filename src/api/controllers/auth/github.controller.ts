@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import APIResponse from "../../../interfaces/responses/APIResponse";
-import { handleServerError } from "../../../errors/server.error";
-import { User } from "../../../database/models/user.model";
-import { generateAccessToken } from "../../../utils/jwt";
+import { Request, Response } from 'express';
+import APIResponse from '../../../interfaces/responses/APIResponse';
+import { handleServerError } from '../../../errors/server.error';
+import { User } from '../../../database/models/user.model';
+import { generateAccessToken } from '../../../utils/jwt';
 
 export async function githubLogin(req: Request, res: Response<APIResponse>) {
   try {
-    res.status(200).json({ success: true, message: "Logged successfully" });
+    res.status(200).json({ success: true, message: 'Logged successfully' });
   } catch (error) {
     handleServerError(res, error);
   }
@@ -14,14 +14,14 @@ export async function githubLogin(req: Request, res: Response<APIResponse>) {
 
 export async function githubLoginCallback(
   req: Request,
-  res: Response<APIResponse>
+  res: Response<APIResponse>,
 ) {
   try {
 
     const requestUser = req.user as any;
 
     if (!requestUser) {
-      return res.status(400).json({ message: "User not on req", success: false });
+      return res.status(400).json({ message: 'User not on req', success: false });
     }
 
     const user: any = await User.findOne({
@@ -31,7 +31,7 @@ export async function githubLoginCallback(
 
     if (!user) {
       return res.status(401).json({
-        message: "Invalid email or password",
+        message: 'Invalid email or password',
         success: false,
       });
     }
@@ -42,7 +42,7 @@ export async function githubLoginCallback(
     });
 
     res.status(200).json({
-      message: "Login successful",
+      message: 'Login successful',
       success: true,
       data: { user, token },
     });

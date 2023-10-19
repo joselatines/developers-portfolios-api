@@ -11,13 +11,13 @@ export const sequelize = new Sequelize({
 
 export async function connectDB() {
   try {
-    console.info('trying to connect db...');
+    console.info('trying to connect DB...');
     await sequelize.authenticate();
     await sequelize.sync();
 
-    console.info('db sequelize connected successfully');
+    console.info('✨ db sequelize connected successfully');
   } catch (error) {
-    console.info('an error occurred while trying to connect to db');
+    console.error('an error occurred while trying to connect to db');
     console.error(error);
   }
 }
@@ -28,7 +28,7 @@ export async function clearDB() {
     await User.truncate();
     console.info('tables cleared');
   } catch (error) {
-    console.info('an error occurred while trying to clear db tables');
+    console.error('an error occurred while trying to clear db tables');
     console.error(error);
   }
 }
