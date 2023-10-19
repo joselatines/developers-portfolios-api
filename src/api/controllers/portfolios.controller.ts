@@ -5,20 +5,33 @@ import {
 	PortfolioDocument,
 } from "../../database/models/portfolio.model";
 import { getUserFromToken } from "../../utils/jwt";
-
+import { handleServerError } from "../../errors/server.error";
+import { User } from "../../database/models/user.model";
+import { Op } from "sequelize";
 export async function getAllPortfolios(
 	req: Request,
 	res: Response<APIResponse>
 ) {
 	try {
-		const portfolios = await Portfolio.find({});
-		res
-			.status(200)
-			.json({ message: "Get all portfolios", success: true, data: portfolios });
+		const portfolios = await Portfolio.findAll({
+			include: [
+				{
+					model: User,
+
+					attributes: {
+						exclude: ["password", "role", "createdAt", "updatedAt"],
+					},
+				},
+			],
+		});
+
+		res.status(200).json({
+			message: "Get all portfolios",
+			success: true,
+			data: portfolios,
+		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Internal Server Error", success: false, error });
+		handleServerError(res, error);
 	}
 }
 
@@ -40,12 +53,16 @@ export async function createPortfolio(
 				.status(500)
 				.json({ message: "User not on auth header", success: false });
 
-		const portfolio: PortfolioDocument = {
-			...req.body,
-			created_by: user.id,
-		};
+		let portfolioBody: PortfolioDocument = req.body;
 
-		const portfolioCreated = await Portfolio.create(portfolio);
+		// parsing array to save it into sqlite db
+		const images = portfolioBody.images.join(", ");
+
+		const portfolioCreated = await Portfolio.create({
+			...portfolioBody,
+			images,
+			created_by: user.id,
+		});
 
 		res.status(201).json({
 			message: "Portfolio created",
@@ -53,25 +70,21 @@ export async function createPortfolio(
 			data: portfolioCreated,
 		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Internal Server Error", success: false, error });
+		handleServerError(res, error);
 	}
 }
 
 export async function getPortfolio(req: Request, res: Response<APIResponse>) {
 	try {
 		const portfolioId = req.params.id;
-		const portfolioFound = await Portfolio.findById(portfolioId);
+		const portfolioFound = await Portfolio.findByPk(portfolioId);
 		res.status(200).json({
 			message: "Portfolio found",
 			success: true,
 			data: portfolioFound,
 		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Internal Server Error", success: false, error });
+		handleServerError(res, error);
 	}
 }
 
@@ -81,38 +94,33 @@ export async function deletePortfolio(
 ) {
 	try {
 		const portfolioId = req.params.id;
-		const portfolioDeleted = await Portfolio.findByIdAndDelete(portfolioId);
+		const portfolioDeleted = await Portfolio.destroy({
+			where: { id: portfolioId },
+		});
 		res.status(200).json({
 			message: "Portfolio deleted",
 			success: true,
 			data: portfolioDeleted,
 		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Internal Server Error", success: false, error });
+		handleServerError(res, error);
 	}
 }
 
 export async function editPortfolio(req: Request, res: Response<APIResponse>) {
 	try {
 		const portfolioId = req.params.id;
-		const portfolio = req.body;
-		const portfolioEdited = await Portfolio.findByIdAndUpdate(
-			portfolioId,
-			portfolio,
-			{
-				new: true,
-			}
-		);
+		const portfolioBody = req.body;
+		const [portfolioEdited] = await Portfolio.update(portfolioBody, {
+			where: { id: portfolioId },
+			returning: true,
+		});
 		res.status(200).json({
 			message: "Portfolio edited",
 			success: true,
 			data: portfolioEdited,
 		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Internal Server Error", success: false, error });
+		handleServerError(res, error);
 	}
 }

@@ -1,12 +1,14 @@
 import express from "express";
 import {
-	createRatings,
+	createRating,
+	deleteRating,
 	getAllRatings,
 } from "../controllers/ratings.controller";
 
 const router = express.Router();
 
 router.get("/", getAllRatings);
-router.post("/", createRatings);
+router.post("/", createRating);
+router.delete("/:id", deleteRating);
 
 export default router;

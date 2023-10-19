@@ -1,5 +1,9 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { UserDocument } from "./user.model";
+import { DataTypes, UUID } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
+import { User } from "./user.model";
+import { Ratings } from "./rating.model";
+import { sequelize } from "../connection";
+
 const PORTFOLIO_TYPES = {
 	backend: "backend",
 	frontend: "frontend",
@@ -10,41 +14,59 @@ const PORTFOLIO_TYPES = {
 
 type IPortfolioType = keyof typeof PORTFOLIO_TYPES;
 
-export interface PortfolioDocument extends Document {
+export interface PortfolioDocument {
 	images: string[];
-	created_by: UserDocument;
+	created_by: number;
 	website_link: string;
 	type: IPortfolioType;
 	title: string;
-	description: string;
-	ratings: any;
+	description?: string;
 }
 
-const portfolioSchema = new Schema<PortfolioDocument>({
-	images: {
-		type: [String],
-		required: true,
-	},
-	created_by: {
-		type: Schema.Types.ObjectId,
-		ref: "User",
-		required: true,
-	},
-	website_link: {
-		type: String,
-		required: true,
-	},
-	title: { type: String, required: true },
-	description: { type: String },
-	type: {
-		type: String,
-		enum: Object.values(PORTFOLIO_TYPES), // Enforce the type to be one of the specified values
-		default: "frontend",
-	},
-	ratings: [{ type: Schema.Types.ObjectId, ref: "Ratings" }],
-});
-
-export const Portfolio = mongoose.model<PortfolioDocument>(
+export const Portfolio = sequelize.define(
 	"Portfolio",
-	portfolioSchema
+	{
+		id: {
+			type: UUID,
+			defaultValue: uuidv4(),
+			primaryKey: true,
+		},
+		images: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		created_by: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			references: {
+				model: User,
+				key: "id",
+			},
+		},
+		website_link: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		title: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		description: {
+			type: DataTypes.STRING,
+		},
+		type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				isIn: [Object.values(PORTFOLIO_TYPES)],
+			},
+			defaultValue: "frontend",
+		},
+	},
+	{
+		timestamps: false,
+	}
 );
+
+Portfolio.belongsTo(User, { foreignKey: "created_by" }); // A Portfolio belongs to one user
+Portfolio.hasMany(Ratings, { foreignKey: "portfolio_id" }); // A Portfolio has many ratings

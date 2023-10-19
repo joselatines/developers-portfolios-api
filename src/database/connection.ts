@@ -1,27 +1,45 @@
-import mongoose, { Connection } from "mongoose";
-import { envConfig } from "../dotenv/config"; // Assuming you have a config file with MongoDB connection details
+import { Sequelize } from "sequelize";
+import { User } from "./models/user.model";
+// TODO: ADD DB NAME TO ENV
+/* if ((!DB_NAME, !DB_USER_NAME, !DB_NAME))
+	throw new BadRequestError("Env variables are not presented on db connection"); */
 
-const { DB_USER, DB_PASSWORD, DB_COLLECTION, PORT } = envConfig;
+export const sequelize = new Sequelize({
+	dialect: "sqlite",
+	storage: "./my_db.sqlite",
+});
 
-// Construct the MongoDB connection URL
-const mongoURI = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.ybuq3gj.mongodb.net/${DB_COLLECTION}?retryWrites=true&w=majority`;
+export async function connectDB() {
+	try {
+		console.info("trying to connect db...");
+		await sequelize.authenticate();
+		await sequelize.sync();
 
-// Mongoose options
-const mongooseOptions: mongoose.ConnectOptions = {};
+		console.info("db sequelize connected successfully");
+	} catch (error) {
+		console.info("an error occurred while trying to connect to db");
+		console.error(error);
+	}
+}
 
-// Connect to MongoDB
-mongoose.connect(mongoURI, mongooseOptions);
+export async function clearDB() {
+	try {
+		console.info("clearing tables...");
+		await User.truncate();
+		console.info("tables cleared");
+	} catch (error) {
+		console.info("an error occurred while trying to clear db tables");
+		console.error(error);
+	}
+}
 
-// Get the default connection
-const db: Connection = mongoose.connection;
-
-export const connectDb = () => {
-	// Event listeners for connection status
-	db.on("error", console.error.bind(console, "MongoDB connection error:"));
-	db.once("open", () => {
-		console.log("Connected to MongoDB");
-	});
-};
-
-// Export the mongoose instance for use in other parts of your application
-export default mongoose;
+export async function closeDB() {
+	try {
+		console.info("closing db");
+		await sequelize.close();
+		console.info("dn is closed");
+	} catch (error) {
+		console.info("an error occurred while trying to close db");
+		console.error(error);
+	}
+}

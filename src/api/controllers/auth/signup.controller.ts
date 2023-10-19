@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import APIResponse from "../../../interfaces/responses/APIResponse";
 import { User } from "../../../database/models/user.model";
 import { encrypt } from "../../../utils/helpers";
+import { handleServerError } from "../../../errors/server.error";
 
 export async function signUpController(
 	req: Request,
@@ -11,7 +12,7 @@ export async function signUpController(
 
 	try {
 		// Check if the email is already registered
-		const existingUser = await User.findOne({ email });
+		const existingUser = await User.findOne({ where: { email } });
 		if (existingUser) {
 			return res.status(200).json({
 				message: `${email} is already signed up. Please try logging in.`,
@@ -35,11 +36,6 @@ export async function signUpController(
 			data: { user: newUser },
 		});
 	} catch (error) {
-		console.error("Error during sign up:", error);
-		res.status(500).json({
-			message: "Internal server error",
-			success: false,
-			error,
-		});
+		handleServerError(res, error);
 	}
 }

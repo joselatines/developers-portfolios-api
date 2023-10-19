@@ -1,31 +1,40 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { PortfolioDocument } from "./portfolio.model";
-import { UserDocument } from "./user.model";
+import { DataTypes, UUID } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
+import { sequelize } from "../connection";
+import { Portfolio } from "./portfolio.model";
+import { User } from "./user.model";
 
-export interface RatingsDocument extends Document {
+export interface RatingsDocument {
 	rating: number;
-	portfolio_id: PortfolioDocument;
-	user_id: UserDocument;
+	portfolio_id: number;
+	user_id: number;
 }
 
-const ratingsSchema = new Schema<RatingsDocument>({
+export const Ratings = sequelize.define("Ratings", {
+	id: {
+		type: UUID,
+		defaultValue: uuidv4(),
+		primaryKey: true,
+	},
 	rating: {
-		type: Number,
-		required: true,
+		type: DataTypes.NUMBER,
+		allowNull: false,
 	},
 	portfolio_id: {
-		type: Schema.Types.ObjectId,
-		ref: "Portfolio",
-		required: true,
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		unique: true,
+		references: {
+			model: Portfolio,
+			key: "id",
+		},
 	},
 	user_id: {
-		type: Schema.Types.ObjectId,
-		ref: "User",
-		required: true,
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		references: {
+			model: User,
+			key: "id",
+		},
 	},
 });
-
-export const Ratings = mongoose.model<RatingsDocument>(
-	"Ratings",
-	ratingsSchema
-);

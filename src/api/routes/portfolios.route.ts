@@ -6,8 +6,6 @@ import {
 	editPortfolio,
 	getPortfolio,
 } from "../controllers/portfolios.controller";
-import { isAdminMiddleware } from "../middlewares/is-admin.middleware";
-import { isAuthenticatedMiddleware } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 

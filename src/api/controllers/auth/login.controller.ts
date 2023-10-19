@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import APIResponse from "../../../interfaces/responses/APIResponse";
-import { User } from "../../../database/models/user.model";
+import { User, UserDocument } from "../../../database/models/user.model";
 import { compareEncrypted } from "../../../utils/helpers";
 import { generateAccessToken } from "../../../utils/jwt";
+import { handleServerError } from "../../../errors/server.error";
 
 export async function loginController(
 	req: Request,
@@ -12,17 +13,17 @@ export async function loginController(
 
 	try {
 		// Check if the user exists in the database
-		const user = await User.findOne({ email });
-
+		const user = await User.findOne({ where: { email } });
 		if (!user) {
 			return res.status(401).json({
 				message: "Invalid email or password",
 				success: false,
 			});
 		}
+		const userData: UserDocument = user.dataValues;
 
 		// Check if the password is correct(same)
-		const isPasswordValid = await compareEncrypted(password, user.password);
+		const isPasswordValid = await compareEncrypted(password, userData.password);
 
 		if (!isPasswordValid) {
 			return res.status(401).json({
@@ -32,7 +33,10 @@ export async function loginController(
 		}
 
 		// Creating a JWT token
-		const token = generateAccessToken({ id: user._id, role: user.role });
+		const token = generateAccessToken({
+			id: userData.id,
+			role: userData.role,
+		});
 
 		res.status(200).json({
 			message: "Login successful",
@@ -40,9 +44,6 @@ export async function loginController(
 			data: { user, token },
 		});
 	} catch (error) {
-		console.error(error);
-		res
-			.status(500)
-			.json({ message: "Internal Server Error", success: false, error });
+		handleServerError(res, error);
 	}
 }
