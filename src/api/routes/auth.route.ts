@@ -1,5 +1,4 @@
 import express from "express";
-import { getAllUsers } from "../controllers/users.controller";
 import { signUpController } from "../controllers/auth/signup.controller";
 import { loginController } from "../controllers/auth/login.controller";
 import {
@@ -7,12 +6,13 @@ import {
 	githubLoginCallback,
 } from "../controllers/auth/github.controller";
 import passport from "passport";
+import { logoutController } from "../controllers/auth/logout.controllers";
 
 const router = express.Router();
 
 router.post("/signup", signUpController);
 router.get("/login", loginController);
-router.post("/logout", getAllUsers);
+router.get("/logout", logoutController);
 
 router.get(
 	"/github",
