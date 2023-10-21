@@ -1,7 +1,8 @@
 import { Response } from 'express';
 
 export const handleServerError = (res: Response, error: any) => {
-  res
+  console.error('⚠️ -> ',error)
+  return res
     .status(500)
     .json({ message: 'Internal Server Error', success: false, error });
 };
