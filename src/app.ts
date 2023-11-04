@@ -16,9 +16,9 @@ import "./utils/passport-setup";
 
 const app = express();
 
+app.use(cors({ origin: ["http://localhost:3000", "http://localhost:5173"] }));
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors({ origin: ["http://localhost:3000", "http://localhost:5173/"] }));
 app.use(express.json());
 app.use(
 	session({ secret: "keyboard cat", resave: false, saveUninitialized: false })
