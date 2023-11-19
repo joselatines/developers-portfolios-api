@@ -15,7 +15,7 @@ export async function loginController(
 		// Check if the user exists in the database
 		const user = await User.findOne({ where: { email } });
 		if (!user) {
-			return res.status(401).json({
+			return res.status(200).json({
 				message: "Invalid email or password",
 				success: false,
 			});
@@ -26,7 +26,7 @@ export async function loginController(
 		const isPasswordValid = await compareEncrypted(password, userData.password);
 
 		if (!isPasswordValid) {
-			return res.status(401).json({
+			return res.status(200).json({
 				message: "Invalid email or password",
 				success: false,
 			});

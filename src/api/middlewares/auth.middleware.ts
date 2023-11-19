@@ -1,26 +1,36 @@
-import { NextFunction, Request, Response } from 'express';
-import APIResponse from '../../interfaces/responses/APIResponse';
-import { getUserFromToken } from '../../utils/jwt';
+import { NextFunction, Request, Response } from "express";
+import APIResponse from "../../interfaces/responses/APIResponse";
+import { getUserFromToken } from "../../utils/jwt";
 
 export function isAuthenticatedMiddleware(
-  req: Request,
-  res: Response<APIResponse>,
-  next: NextFunction,
+	req: Request,
+	res: Response<APIResponse>,
+	next: NextFunction
 ) {
-  if (!req.headers.authorization || req.headers.authorization?.length < 0)
-    return res
-      .status(400)
-      .json({ message: 'Not authorization header', success: false });
+	const authorizationHeader = req.headers.authorization;
 
-  // TODO: typo problem
-  const user: any = getUserFromToken(req.headers.authorization);
+	if (!authorizationHeader || authorizationHeader.length === 0) {
+		return res.status(400).json({
+			message: "No authorization header",
+			success: false,
+		});
+	}
 
-  if (user && user.role === 'user') {
-    next();
-  } else {
-    res.status(403).json({
-      message: 'You need to authenticate yourself to use this route',
-      success: false,
-    });
-  }
+	try {
+		const user: any = getUserFromToken(authorizationHeader);
+
+		if (user && user.role === "user") {
+			next();
+		} else {
+			res.status(403).json({
+				message: "You need to authenticate yourself to use this route",
+				success: false,
+			});
+		}
+	} catch (error) {
+		res.status(401).json({
+			message: "Invalid token",
+			success: false,
+		});
+	}
 }

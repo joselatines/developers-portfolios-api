@@ -7,6 +7,52 @@ import {
 import { getUserFromToken } from "../../utils/jwt";
 import { handleServerError } from "../../errors/server.error";
 import { User } from "../../database/models/user.model";
+
+export async function getAllPortfoliosFromCurrentUser(
+	req: Request,
+	res: Response<APIResponse>
+) {
+	try {
+		const authHeader = req.headers.authorization;
+		if (!authHeader)
+			return res.status(401).json({
+				message: "Authorization header doesn't exits",
+				success: false,
+			});
+		const userJWT = getUserFromToken(authHeader) as any;
+		if (!userJWT)
+			return res.status(401).json({
+				message: "JWT user is not valid",
+				success: false,
+			});
+
+		let portfolios: any = await Portfolio.findAll({
+			include: [
+				{
+					model: User,
+					attributes: {
+						exclude: ["password", "role", "createdAt", "updatedAt"],
+					},
+				},
+			],
+		});
+		console.log(portfolios[2].images);
+
+		if (portfolios.length > 0) {
+			portfolios = portfolios.map((portfolio: any) => {
+				return { ...portfolio.toJSON(), images: portfolio.images.split(", ") };
+			});
+		}
+
+		res.status(200).json({
+			message: "Get all my portfolios",
+			success: true,
+			data: portfolios,
+		});
+	} catch (error) {
+		handleServerError(res, error);
+	}
+}
 export async function getAllPortfolios(
 	req: Request,
 	res: Response<APIResponse>
@@ -44,21 +90,17 @@ export async function createPortfolio(
 	res: Response<APIResponse>
 ) {
 	try {
-		if (!req.headers.authorization)
-			return res.status(500).json({
-				message: "You need to pass a the token to the auth header",
-				success: false,
-			});
+		const authHeader: any = req.headers.authorization;
 
-		const user: any = getUserFromToken(req.headers.authorization);
+		const user: any = getUserFromToken(authHeader);
 
 		if (!user)
 			return res
-				.status(500)
-				.json({ message: "User not on auth header", success: false });
+				.status(200)
+				.json({ message: "Token not found auth header", success: false });
 
 		let portfolioBody: PortfolioDocument = req.body;
-
+		console.log(portfolioBody)
 		// parsing array to save it into sqlite db
 		const images = portfolioBody.images.join(", ");
 

@@ -29,7 +29,7 @@ export async function signUpController(
 			password: hashedPassword,
 		});
 
-		res.status(200).json({
+		res.status(201).json({
 			message: "Sign up successful",
 			success: true,
 			data: { user: newUser },
