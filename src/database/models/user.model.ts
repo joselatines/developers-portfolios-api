@@ -5,7 +5,7 @@ import { envConfig } from "../../dotenv/config";
 const { ADMIN_ROLE } = envConfig;
 
 export interface UserDocument {
-	username: string;
+	githubUsername: string;
 	email: string;
 	password: string;
 	role: typeof ADMIN_ROLE | "user";
@@ -21,7 +21,7 @@ export const User = sequelize.define("User", {
 		defaultValue: UUIDV4,
 		primaryKey: true,
 	},
-	username: {
+	githubUsername: {
 		type: DataTypes.STRING,
 	},
 	email: {
@@ -34,9 +34,6 @@ export const User = sequelize.define("User", {
 	role: {
 		type: DataTypes.STRING,
 		defaultValue: "user",
-	},
-	github: {
-		type: DataTypes.STRING,
 	},
 	profilePic: {
 		type: DataTypes.STRING,

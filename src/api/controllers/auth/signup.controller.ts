@@ -8,7 +8,7 @@ export async function signUpController(
 	req: Request,
 	res: Response<APIResponse>
 ) {
-	const { username, email, password } = req.body;
+	const { githubUsername, email, password } = req.body;
 
 	try {
 		// Check if the email is already registered
@@ -24,7 +24,7 @@ export async function signUpController(
 
 		// Create a new user
 		const newUser = await User.create({
-			username,
+			githubUsername,
 			email,
 			password: hashedPassword,
 		});

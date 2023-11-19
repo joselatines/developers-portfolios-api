@@ -22,8 +22,7 @@ passport.use(
       try {
         const userProfile = {
           email: profile._json.email,
-          username: profile.username,
-          github: profile.profileUrl,
+          githubUsername: profile.username,
           profilePic: profile.photos[0].value,
           provider: profile.provider,
         };
