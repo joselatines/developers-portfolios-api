@@ -11,7 +11,7 @@ import { logoutController } from '../controllers/auth/logout.controllers';
 const router = express.Router();
 
 router.post('/signup', signUpController);
-router.get('/login', loginController);
+router.post('/login', loginController);
 router.get('/logout', logoutController);
 
 router.get(
