@@ -42,7 +42,7 @@ export async function loginController(
 		res.status(200).json({
 			message: "Login successful",
 			success: true,
-			data: { user, token },
+			data: { ...user.dataValues, token },
 		});
 	} catch (error) {
 		handleServerError(res, error);
