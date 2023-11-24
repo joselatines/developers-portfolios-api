@@ -4,7 +4,6 @@ import helmet from "helmet";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
-
 import usersRoutes from "./api/routes/users.route";
 import authRoutes from "./api/routes/auth.route";
 import portfoliosRoutes from "./api/routes/portfolios.route";
@@ -18,7 +17,7 @@ const app = express();
 
 app.use(
 	cors({
-		origin: 'http://localhost:5173',
+		origin: "http://localhost:5173",
 		credentials: true,
 	})
 );
