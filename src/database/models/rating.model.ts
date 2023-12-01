@@ -27,7 +27,6 @@ export const Ratings = sequelize.define('Ratings', {
   portfolio_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true,
     references: {
       model: Portfolio,
       key: 'id',
