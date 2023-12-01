@@ -1,4 +1,4 @@
-import { DataTypes, UUID , UUIDV4} from 'sequelize';
+import { DataTypes, UUID, UUIDV4 } from 'sequelize';
 import { sequelize } from '../connection';
 import { Portfolio } from './portfolio.model';
 import { User } from './user.model';
@@ -6,7 +6,8 @@ import { User } from './user.model';
 export interface RatingsDocument {
   rating: number;
   portfolio_id: number;
-  user_id: number;
+  rated_by: number;
+  comment?: string;
 }
 
 export const Ratings = sequelize.define('Ratings', {
@@ -14,6 +15,10 @@ export const Ratings = sequelize.define('Ratings', {
     type: UUID,
     defaultValue: UUIDV4,
     primaryKey: true,
+  },
+  comment: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   rating: {
     type: DataTypes.NUMBER,
@@ -28,7 +33,7 @@ export const Ratings = sequelize.define('Ratings', {
       key: 'id',
     },
   },
-  user_id: {
+  rated_by: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {

@@ -39,7 +39,7 @@ export async function createRating(req: Request, res: Response<APIResponse>) {
     const ratingCreated = await Ratings.create({
       ...ratingBody,
       rating: parseRating(ratingBody.rating),
-      user_id: user.id,
+      rated_by: user.id,
     });
 
     res.status(201).json({

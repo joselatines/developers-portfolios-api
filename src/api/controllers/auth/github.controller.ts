@@ -39,7 +39,7 @@ export async function githubLoginCallback(
     const token = generateAccessToken({
       id: user.id,
       role: user.role,
-      email: requestUser._json.email
+      email: requestUser._json.email,
     });
 
     res.status(200).json({

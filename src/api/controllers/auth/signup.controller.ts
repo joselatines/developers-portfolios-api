@@ -1,40 +1,40 @@
-import { Request, Response } from "express";
-import APIResponse from "../../../interfaces/responses/APIResponse";
-import { User } from "../../../database/models/user.model";
-import { encrypt } from "../../../utils/helpers";
-import { handleServerError } from "../../../errors/server.error";
+import { Request, Response } from 'express';
+import APIResponse from '../../../interfaces/responses/APIResponse';
+import { User } from '../../../database/models/user.model';
+import { encrypt } from '../../../utils/helpers';
+import { handleServerError } from '../../../errors/server.error';
 
 export async function signUpController(
-	req: Request,
-	res: Response<APIResponse>
+  req: Request,
+  res: Response<APIResponse>,
 ) {
-	const { githubUsername, email, password } = req.body;
+  const { githubUsername, email, password } = req.body;
 
-	try {
-		// Check if the email is already registered
-		const existingUser = await User.findOne({ where: { email } });
-		if (existingUser) {
-			return res.status(200).json({
-				message: `${email} is already signed up. Please try logging in.`,
-				success: false,
-			});
-		}
+  try {
+    // Check if the email is already registered
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(200).json({
+        message: `${email} is already signed up. Please try logging in.`,
+        success: false,
+      });
+    }
 
-		const hashedPassword = await encrypt(password);
+    const hashedPassword = await encrypt(password);
 
-		// Create a new user
-		const newUser = await User.create({
-			githubUsername,
-			email,
-			password: hashedPassword,
-		});
+    // Create a new user
+    const newUser = await User.create({
+      githubUsername,
+      email,
+      password: hashedPassword,
+    });
 
-		res.status(201).json({
-			message: "Sign up successful",
-			success: true,
-			data: { user: newUser },
-		});
-	} catch (error) {
-		handleServerError(res, error);
-	}
+    res.status(201).json({
+      message: 'Sign up successful',
+      success: true,
+      data: { user: newUser },
+    });
+  } catch (error) {
+    handleServerError(res, error);
+  }
 }

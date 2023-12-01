@@ -12,7 +12,7 @@ import { upload } from '../../multer.config';
 
 const router = express.Router();
 
-router.get('/me',isAuthenticatedMiddleware, getAllPortfoliosFromCurrentUser);
+router.get('/me', isAuthenticatedMiddleware, getAllPortfoliosFromCurrentUser);
 router.get('/', getAllPortfolios);
 router.get('/:id', getPortfolio);
 router.post('/', isAuthenticatedMiddleware, upload.single('files'), createPortfolio);
