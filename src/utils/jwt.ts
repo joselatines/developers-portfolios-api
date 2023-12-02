@@ -10,7 +10,7 @@ interface IData {
 
 export function generateAccessToken(
   secretData: IData,
-  expiresIn = '1h',
+  expiresIn = '48h',
 ): string {
   return jwt.sign(secretData, JWT_SECRET, {
     expiresIn,

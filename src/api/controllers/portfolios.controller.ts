@@ -81,10 +81,11 @@ export async function getAllPortfolios(
 				},
 			});
 
+			let avg_rating = averageRating?.get("averageRating");
 			return {
 				...portfolio.toJSON(),
 				images: portfolio.images.split(", "),
-				avg_rating: Number(averageRating?.get("averageRating").toFixed(2)),
+				avg_rating: avg_rating ? Number(avg_rating.toFixed(2)) : 10,
 			};
 		});
 
@@ -173,10 +174,16 @@ export async function editPortfolio(req: Request, res: Response<APIResponse>) {
 	try {
 		const portfolioId = req.params.id;
 		const portfolioBody = req.body;
-		const [portfolioEdited] = await Portfolio.update(portfolioBody, {
-			where: { id: portfolioId },
-			returning: true,
-		});
+		// parsing array to save it into sqlite db
+		const images = portfolioBody.images.join(", ");
+		
+		const [portfolioEdited] = await Portfolio.update(
+			{ ...portfolioBody, images },
+			{
+				where: { id: portfolioId },
+				returning: true,
+			}
+		);
 		res.status(200).json({
 			message: "Portfolio edited",
 			success: true,
