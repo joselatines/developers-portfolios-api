@@ -39,16 +39,32 @@ export async function getAllPortfoliosFromCurrentUser(
 			],
 		});
 
-		if (portfolios.length > 0) {
-			portfolios = portfolios.map((portfolio: any) => {
-				return { ...portfolio.toJSON(), images: portfolio?.images.split(", ") };
+		const portfolioPromises = portfolios.map(async (portfolio: any) => {
+			const averageRating: any = await Ratings.findOne({
+				attributes: [
+					[sequelize.fn("AVG", sequelize.col("rating")), "averageRating"],
+				],
+				where: {
+					portfolio_id: portfolio.id,
+				},
 			});
-		}
+
+			let avg_rating = averageRating?.get("averageRating");
+			return {
+				...portfolio.toJSON(),
+				images: portfolio.images.split(", "),
+				avg_rating: avg_rating ? Number(avg_rating.toFixed(2)) : 10,
+			};
+		});
+
+		// Use Promise.all to asynchronously fetch average ratings for each portfolio
+		const portfoliosWithAverageRating = await Promise.all(portfolioPromises);
+
 
 		res.status(200).json({
 			message: "Get all my portfolios",
 			success: true,
-			data: portfolios,
+			data: portfoliosWithAverageRating,
 		});
 	} catch (error) {
 		handleServerError(res, error);
