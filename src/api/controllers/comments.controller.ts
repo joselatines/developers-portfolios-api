@@ -6,8 +6,11 @@ import { User } from "../../database/models/user.model";
 export async function getAllComments(req: Request, res: Response<APIResponse>) {
 	try {
 		let comments: any = await Ratings.findAll({
-			order: [["updatedAt", "ASC"], ["createdAt", "ASC"]],
-			attributes: { exclude: ["rated_by", "createdAt", "updatedAt"] },
+			order: [
+				["updatedAt", "ASC"],
+				["createdAt", "ASC"],
+			],
+			attributes: { exclude: ["rated_by"] },
 			include: [
 				{
 					model: User,
