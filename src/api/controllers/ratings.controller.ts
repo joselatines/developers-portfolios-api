@@ -38,27 +38,12 @@ export async function createRating(req: Request, res: Response<APIResponse>) {
 
 		const body: RatingsDocument = req.body;
 
-		const alreadyRated = await Ratings.findOne({
-			where: { rated_by: user.id, portfolio_id: body.portfolio_id },
+		const portfolioRated = await Ratings.create({
+			...body,
+			rating: parseRating(body.rating),
+			rated_by: user.id,
 		});
-
-		let portfolioRated;
-
-		if (alreadyRated) {
-			// Update the existing rating if already rated
-			console.log(alreadyRated);
-			portfolioRated = await alreadyRated.update({
-				...body,
-				rating: parseRating(body.rating),
-			});
-		} else {
-			// Create a new rating if not already rated
-			portfolioRated = await Ratings.create({
-				...body,
-				rating: parseRating(body.rating),
-				rated_by: user.id,
-			});
-		}
+		
 		res.status(201).json({
 			message: "You has rated this portfolio",
 			success: true,

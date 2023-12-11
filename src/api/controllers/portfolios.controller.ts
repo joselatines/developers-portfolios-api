@@ -60,7 +60,6 @@ export async function getAllPortfoliosFromCurrentUser(
 		// Use Promise.all to asynchronously fetch average ratings for each portfolio
 		const portfoliosWithAverageRating = await Promise.all(portfolioPromises);
 
-
 		res.status(200).json({
 			message: "Get all my portfolios",
 			success: true,
@@ -122,6 +121,13 @@ export async function createPortfolio(
 	req: Request,
 	res: Response<APIResponse>
 ) {
+	const file = req.file;
+	if (!file)
+		return res.status(200).json({
+			message: "Upload at least 1 image",
+			success: false,
+		});
+
 	try {
 		const authHeader: any = req.headers.authorization;
 
@@ -134,12 +140,16 @@ export async function createPortfolio(
 
 		let portfolioBody: PortfolioDocument = req.body;
 
-		// parsing array to save it into sqlite db
-		const images = portfolioBody.images.join(", ");
+		// 1MB
+		if (file.size > 1000000)
+			return res.status(400).json({
+				message: "Image must be max 1MB",
+				success: false,
+			});
 
 		const portfolioCreated = await Portfolio.create({
 			...portfolioBody,
-			images,
+			images: file.path,
 			created_by: user.id,
 		});
 
@@ -192,7 +202,7 @@ export async function editPortfolio(req: Request, res: Response<APIResponse>) {
 		const portfolioBody = req.body;
 		// parsing array to save it into sqlite db
 		const images = portfolioBody.images.join(", ");
-		
+
 		const [portfolioEdited] = await Portfolio.update(
 			{ ...portfolioBody, images },
 			{

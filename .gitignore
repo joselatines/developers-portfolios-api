@@ -1,6 +1,4 @@
 # Custom app
-.my_db.sqlite
-*.sqlite
 
 # Logs
 logs
