@@ -1,21 +1,21 @@
-import { Request, Response } from "express";
-import APIResponse from "../../interfaces/responses/APIResponse";
-import { Ratings } from "../../database/models/rating.model";
-import { handleServerError } from "../../errors/server.error";
-import { User } from "../../database/models/user.model";
-import { getUserFromToken } from "../../utils/jwt";
+import { Request, Response } from 'express';
+import APIResponse from '../../interfaces/responses/APIResponse';
+import { Ratings } from '../../database/models/rating.model';
+import { handleServerError } from '../../errors/server.error';
+import { User } from '../../database/models/user.model';
+import { getUserFromToken } from '../../utils/jwt';
 export async function getAllComments(req: Request, res: Response<APIResponse>) {
   try {
     const comments: any = await Ratings.findAll({
       order: [
-        ["updatedAt", "ASC"],
-        ["createdAt", "ASC"],
+        ['updatedAt', 'ASC'],
+        ['createdAt', 'ASC'],
       ],
       include: [
         {
           model: User,
           attributes: {
-            exclude: ["password", "role", "createdAt", "updatedAt", "provider"],
+            exclude: ['password', 'role', 'createdAt', 'updatedAt', 'provider'],
           },
         },
       ],
@@ -27,7 +27,7 @@ export async function getAllComments(req: Request, res: Response<APIResponse>) {
     if (!user) {
       return res
         .status(200)
-        .json({ message: "Get all comments", success: true, data: comments });
+        .json({ message: 'Get all comments', success: true, data: comments });
     }
 
     // Separate comments by whether they are rated by the user
@@ -40,7 +40,7 @@ export async function getAllComments(req: Request, res: Response<APIResponse>) {
         }
         return acc;
       },
-      { unratedComments: [], ratedComments: [] }
+      { unratedComments: [], ratedComments: [] },
     );
 
     // Combine the unrated and rated comments
@@ -51,24 +51,24 @@ export async function getAllComments(req: Request, res: Response<APIResponse>) {
 
     return res
       .status(200)
-      .json({ message: "Get all comments", success: true, data: finalOrderedComments });
+      .json({ message: 'Get all comments', success: true, data: finalOrderedComments });
   } catch (error) {
     handleServerError(res, error);
   }
 }
 
 export async function deleteRating(req: Request, res: Response<APIResponse>) {
-	try {
-		const id = req.params.id;
-		const ratingDeleted = await Ratings.destroy({
-			where: { id: id },
-		});
-		res.status(200).json({
-			message: "Rating deleted",
-			success: true,
-			data: ratingDeleted,
-		});
-	} catch (error) {
-		handleServerError(res, error);
-	}
+  try {
+    const id = req.params.id;
+    const ratingDeleted = await Ratings.destroy({
+      where: { id: id },
+    });
+    res.status(200).json({
+      message: 'Rating deleted',
+      success: true,
+      data: ratingDeleted,
+    });
+  } catch (error) {
+    handleServerError(res, error);
+  }
 }
