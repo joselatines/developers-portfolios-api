@@ -1,4 +1,5 @@
 # Custom app
+*.sqlite
 
 # Logs
 logs
