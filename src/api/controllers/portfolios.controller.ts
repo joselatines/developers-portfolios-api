@@ -52,7 +52,6 @@ export async function getAllPortfoliosFromCurrentUser(
 			let avgRating = averageRating?.get("averageRating");
 			return {
 				...portfolio.toJSON(),
-				images: portfolio.images.split(", "),
 				avgRating: avgRating ? Number(avgRating.toFixed(2)) : 10,
 			};
 		});
@@ -99,7 +98,7 @@ export async function getAllPortfolios(
 			let avgRating = averageRating?.get("averageRating");
 			return {
 				...portfolio.toJSON(),
-				images: portfolio.images.split(", "),
+
 				avgRating: avgRating ? Number(avgRating.toFixed(2)) : 10,
 			};
 		});
@@ -132,7 +131,7 @@ export async function createPortfolio(
 				.json({ message: "Token not found auth header", success: false });
 
 		let portfolioBody: PortfolioDocument = req.body;
-
+		console.log(portfolioBody);
 		const portfolioCreated = await Portfolio.create({
 			...portfolioBody,
 			created_by: user.id,
@@ -186,12 +185,6 @@ export async function editPortfolio(req: Request, res: Response<APIResponse>) {
 		const portfolioId = req.params.id;
 		const portfolioBody = req.body;
 
-		// Check if images array exists in portfolioBody
-		const images = portfolioBody.images ? portfolioBody.images.join(", ") : "";
-
-		if (!images) delete portfolioBody.images;
-
-		// Perform the update operation in the database
 		const [portfolioEdited] = await Portfolio.update(portfolioBody, {
 			where: { id: portfolioId },
 			returning: true,

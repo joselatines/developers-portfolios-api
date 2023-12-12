@@ -14,7 +14,7 @@ const PORTFOLIO_TYPES = {
 type IPortfolioType = keyof typeof PORTFOLIO_TYPES;
 
 export interface PortfolioDocument {
-  images: string[];
+  thumbnail: string;
   created_by: number;
   website_link: string;
   type: IPortfolioType;
@@ -30,10 +30,11 @@ export const Portfolio = sequelize.define(
       defaultValue: UUIDV4,
       primaryKey: true,
     },
-    images: {
+    thumbnail: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "https://tonsofthanks.com/wp-content/uploads/2023/08/Funny-Dog-at-Work-Meme.jpg"
+      defaultValue:
+				'https://tonsofthanks.com/wp-content/uploads/2023/08/Funny-Dog-at-Work-Meme.jpg',
     },
     created_by: {
       type: DataTypes.INTEGER,
