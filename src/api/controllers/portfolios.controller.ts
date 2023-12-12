@@ -189,13 +189,10 @@ export async function editPortfolio(req: Request, res: Response<APIResponse>) {
 		// Check if images array exists in portfolioBody
 		const images = portfolioBody.images ? portfolioBody.images.join(", ") : "";
 
-		// Create an object with updated fields based on the existence of images
-		const updateFields = images
-			? { ...portfolioBody, images }
-			: { ...portfolioBody, images: null };
+		if (!images) delete portfolioBody.images;
 
 		// Perform the update operation in the database
-		const [portfolioEdited] = await Portfolio.update(updateFields, {
+		const [portfolioEdited] = await Portfolio.update(portfolioBody, {
 			where: { id: portfolioId },
 			returning: true,
 		});

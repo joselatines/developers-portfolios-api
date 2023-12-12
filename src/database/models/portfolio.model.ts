@@ -33,6 +33,7 @@ export const Portfolio = sequelize.define(
     images: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "https://tonsofthanks.com/wp-content/uploads/2023/08/Funny-Dog-at-Work-Meme.jpg"
     },
     created_by: {
       type: DataTypes.INTEGER,
