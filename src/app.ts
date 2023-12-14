@@ -9,6 +9,7 @@ import authRoutes from "./api/routes/auth.route";
 import portfoliosRoutes from "./api/routes/portfolios.route";
 import ratingsRoutes from "./api/routes/ratings.route";
 import commentsRoutes from "./api/routes/comments.route";
+import profilesRoutes from "./api/routes/profiles.route";
 import { errorHandlerMiddleware } from "./api/middlewares/error-handler";
 import { notFoundMiddleware } from "./api/middlewares/not-found";
 
@@ -48,6 +49,7 @@ app.get("/api/v1", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", usersRoutes);
+app.use("/api/v1/profiles", profilesRoutes);
 app.use("/api/v1/portfolios/comments", commentsRoutes);
 app.use("/api/v1/portfolios/ratings", isAuthenticatedMiddleware, ratingsRoutes);
 app.use("/api/v1/portfolios", portfoliosRoutes);
