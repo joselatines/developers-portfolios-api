@@ -1,4 +1,4 @@
-import { DataTypes, UUID, UUIDV4 } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { User } from './user.model';
 import { Ratings } from './rating.model';
 import { sequelize } from '../connection';
@@ -25,18 +25,18 @@ export interface PortfolioDocument {
 
 export const Portfolio = sequelize.define('Portfolio', {
   id: {
-    type: UUID,
-    defaultValue: UUIDV4,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
   thumbnail: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT, // Updated data type
     allowNull: false,
     defaultValue:
 			'https://tonsofthanks.com/wp-content/uploads/2023/08/Funny-Dog-at-Work-Meme.jpg',
   },
   created_by: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID, // Assuming User id is UUID
     allowNull: false,
     references: {
       model: User,

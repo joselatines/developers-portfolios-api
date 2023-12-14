@@ -21,12 +21,12 @@ export const Ratings = sequelize.define('Ratings', {
     allowNull: true,
   },
   rating: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.INTEGER, // Updated data type
     allowNull: false,
     defaultValue: 10,
   },
   portfolio_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
       model: Portfolio,
@@ -34,7 +34,7 @@ export const Ratings = sequelize.define('Ratings', {
     },
   },
   rated_by: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID, // Corrected data type to match User.id
     allowNull: false,
     references: {
       model: User,

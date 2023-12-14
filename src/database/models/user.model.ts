@@ -1,5 +1,4 @@
 import { DataTypes, UUID, UUIDV4 } from 'sequelize';
-
 import { sequelize } from '../connection';
 import { envConfig } from '../../dotenv/config';
 const { ADMIN_ROLE } = envConfig;
@@ -27,6 +26,9 @@ export const User = sequelize.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      isEmail: true, // Validate email format
+    },
   },
   password: {
     type: DataTypes.STRING,
@@ -36,7 +38,7 @@ export const User = sequelize.define('User', {
     defaultValue: 'user',
   },
   profilePic: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     defaultValue: 'https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg',
   },
   provider: {

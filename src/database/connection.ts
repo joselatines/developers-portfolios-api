@@ -1,12 +1,11 @@
 import { Sequelize } from 'sequelize';
 import { User } from './models/user.model';
-// TODO: ADD DB NAME TO ENV
-/* if ((!DB_NAME, !DB_USER_NAME, !DB_NAME))
-	throw new BadRequestError("Env variables are not presented on db connection"); */
+import { envConfig } from '../dotenv/config';
+const { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } = envConfig;
 
-export const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './my_db.sqlite',
+export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: 'mysql',
 });
 
 export async function connectDB() {
