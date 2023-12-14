@@ -8,6 +8,7 @@
 		"start": "ts-node src/index.ts",
 		"dev": "nodemon src/index.ts",
 		"build": "tsc",
+		"deploy": "npm install && npm run build",
 		"lint": "eslint --fix src test",
 		"test": "jest",
 		"typecheck": "tsc --noEmit"
