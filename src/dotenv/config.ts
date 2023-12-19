@@ -15,6 +15,19 @@ interface EnvVariables {
   NODE_ENV: string;
   PRODUCTION_URL: string;
   DB_HOST: string;
+
+  TYPE: string;
+  PROJECT_ID: string;
+  PRIVATE_KEY_ID: string;
+  PRIVATE_KEY: string;
+  CLIENT_EMAIL: string;
+  CLIENT_ID: string;
+  AUTH_URI: string;
+  TOKEN_URI: string;
+  AUTH_PROVIDER_X509_CERT_URL: string;
+  CLIENT_X509_CERT_URL: string;
+  UNIVERSE_DOMAIN: string;
+  STORAGEBUCKET: string;
 }
 
 const getConfig = (): EnvVariables => {
@@ -29,6 +42,18 @@ const getConfig = (): EnvVariables => {
     GITHUB_CLIENT_ID,
     PRODUCTION_URL,
     DB_HOST,
+    TYPE,
+    PROJECT_ID,
+    PRIVATE_KEY_ID,
+    PRIVATE_KEY,
+    CLIENT_EMAIL,
+    CLIENT_ID,
+    AUTH_URI,
+    TOKEN_URI,
+    AUTH_PROVIDER_X509_CERT_URL,
+    CLIENT_X509_CERT_URL,
+    UNIVERSE_DOMAIN,
+    STORAGEBUCKET
   } = process.env;
   const parsedPort = Number(PORT);
   // TODO: REFACTOR
@@ -41,7 +66,20 @@ const getConfig = (): EnvVariables => {
 		!ADMIN_ROLE ||
 		!GITHUB_CLIENT_ID ||
 		!GITHUB_CLIENT_SECRET ||
-		!PRODUCTION_URL
+		!PRODUCTION_URL ||
+
+    !TYPE ||
+    !PROJECT_ID ||
+    !PRIVATE_KEY_ID ||
+    !PRIVATE_KEY ||
+    !CLIENT_EMAIL ||
+    !CLIENT_ID ||
+    !AUTH_URI ||
+    !TOKEN_URI ||
+    !AUTH_PROVIDER_X509_CERT_URL ||
+    !CLIENT_X509_CERT_URL ||
+    !UNIVERSE_DOMAIN ||
+    !STORAGEBUCKET
   ) {
     throw new Error('Missing required environment variables in config.env');
   }
@@ -58,6 +96,18 @@ const getConfig = (): EnvVariables => {
     NODE_ENV: 'development',
     PRODUCTION_URL,
     DB_HOST,
+    TYPE,
+    PROJECT_ID,
+    PRIVATE_KEY_ID,
+    PRIVATE_KEY,
+    CLIENT_EMAIL,
+    CLIENT_ID,
+    AUTH_URI,
+    TOKEN_URI,
+    AUTH_PROVIDER_X509_CERT_URL,
+    CLIENT_X509_CERT_URL,
+    UNIVERSE_DOMAIN,
+    STORAGEBUCKET
   };
 };
 
