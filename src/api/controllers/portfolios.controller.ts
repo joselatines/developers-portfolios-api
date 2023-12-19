@@ -9,6 +9,7 @@ import { handleServerError } from "../../errors/server.error";
 import { User } from "../../database/models/user.model";
 import { Ratings } from "../../database/models/rating.model";
 import { sequelize } from "../../database/connection";
+import { uploadFile } from "../../utils/firebase/uploadFile";
 
 export const getPortfoliosWithRatings = async (portfolios: any[]) => {
 	const portfolioPromises = portfolios.map(async (portfolio: any) => {
@@ -58,13 +59,28 @@ export async function getPortfolios(req: Request, res: Response<APIResponse>) {
 	}
 }
 
+const getDate = (): string => {
+	const date = new Date();
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+	const seconds = date.getSeconds();
+	const milliseconds = date.getMilliseconds();
+
+	const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+
+	return formattedDate;
+}
+
 export async function createPortfolio(
 	req: Request,
 	res: Response<APIResponse>
 ) {
 	try {
 		const authHeader: any = req.headers.authorization;
-
 		const user: any = getUserFromToken(authHeader);
 
 		if (!user)
@@ -72,7 +88,11 @@ export async function createPortfolio(
 				.status(200)
 				.json({ message: "Token not found auth header", success: false });
 
-		let portfolioBody: PortfolioDocument = req.body;
+		const portfolioBody: PortfolioDocument = req.body;
+		const thumbnail: string = portfolioBody.thumbnail;
+
+		const url: string = await uploadFile({name: `${getDate()}-${portfolioBody.title}.${thumbnail.split('/')[1].split(';')[0]}`, ImageBase64: thumbnail});
+		portfolioBody.thumbnail = url;
 
 		const portfolioCreated = await Portfolio.create({
 			...portfolioBody,
