@@ -53,7 +53,7 @@ const getConfig = (): EnvVariables => {
     AUTH_PROVIDER_X509_CERT_URL,
     CLIENT_X509_CERT_URL,
     UNIVERSE_DOMAIN,
-    STORAGEBUCKET
+    STORAGEBUCKET,
   } = process.env;
   const parsedPort = Number(PORT);
   // TODO: REFACTOR
@@ -107,7 +107,7 @@ const getConfig = (): EnvVariables => {
     AUTH_PROVIDER_X509_CERT_URL,
     CLIENT_X509_CERT_URL,
     UNIVERSE_DOMAIN,
-    STORAGEBUCKET
+    STORAGEBUCKET,
   };
 };
 

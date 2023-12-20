@@ -1,14 +1,14 @@
-import { storage } from './connect'
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { storage } from './connect';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 interface UploadFileParams {
   name: string;
   ImageBase64: string;
 }
 
-const uploadFile = ({name, ImageBase64}: UploadFileParams): Promise<string> => new Promise((resolve, reject) => {
+const uploadFile = ({ name, ImageBase64 }: UploadFileParams): Promise<string> => new Promise((resolve, reject) => {
   const base64Image: string | undefined = ImageBase64.split(';base64,').pop();
-  if(base64Image == undefined) return reject('image isn\'t base 64');
+  if (base64Image == undefined) return reject('image isn\'t base 64');
   const buffer: Buffer = Buffer.from(base64Image, 'base64');
 
   const fileRef = ref(storage, `thumbnail/${name}`);
@@ -28,9 +28,9 @@ const uploadFile = ({name, ImageBase64}: UploadFileParams): Promise<string> => n
     async () => {
       const url:string = await getDownloadURL(fileRef);
       resolve(url);
-    }
+    },
   );
 
-})
+});
 
 export { uploadFile };
