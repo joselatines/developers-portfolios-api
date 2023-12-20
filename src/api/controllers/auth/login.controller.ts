@@ -42,6 +42,8 @@ export async function loginController(
 
     const expiresAt = addHoursToCurrentTime(120);
 
+    delete user.dataValues['password'];
+
     res.status(200).json({
       message: 'Login successful',
       success: true,
