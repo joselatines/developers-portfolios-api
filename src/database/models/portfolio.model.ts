@@ -21,6 +21,7 @@ export interface PortfolioDocument {
   title: string;
   description?: string;
   id: string;
+  file_name: string;
 }
 
 export const Portfolio = sequelize.define('Portfolio', {
@@ -64,6 +65,9 @@ export const Portfolio = sequelize.define('Portfolio', {
       isIn: [Object.values(PORTFOLIO_TYPES)],
     },
     defaultValue: 'frontend',
+  },
+  file_name: {
+    type: DataTypes.TEXT,
   },
 });
 

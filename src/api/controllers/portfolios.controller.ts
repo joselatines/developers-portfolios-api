@@ -9,7 +9,7 @@ import { handleServerError } from "../../errors/server.error";
 import { User } from "../../database/models/user.model";
 import { Ratings } from "../../database/models/rating.model";
 import { sequelize } from "../../database/connection";
-import { uploadFile } from "../../utils/firebase/uploadFile";
+import * as firebase from "../../utils/firebase/firebase";
 
 export const getPortfoliosWithRatings = async (portfolios: any[]) => {
 	const portfolioPromises = portfolios.map(async (portfolio: any) => {
@@ -91,11 +91,13 @@ export async function createPortfolio(
 		const portfolioBody: PortfolioDocument = req.body;
 		const thumbnail: string = portfolioBody.thumbnail;
 
-		const url: string = await uploadFile({name: `${getDate()}-${portfolioBody.title}.${thumbnail.split('/')[1].split(';')[0]}`, ImageBase64: thumbnail});
+		const name: string = `${getDate()}-${portfolioBody.title}.${thumbnail.split('/')[1].split(';')[0]}`;
+		const url: string = await firebase.uploadFile({name, ImageBase64: thumbnail});
 		portfolioBody.thumbnail = url;
 
 		const portfolioCreated = await Portfolio.create({
 			...portfolioBody,
+			file_name: name,
 			created_by: user.id,
 		});
 
@@ -129,6 +131,11 @@ export async function deletePortfolio(
 ) {
 	try {
 		const portfolioId = req.params.id;
+		const portfolioFound = await Portfolio.findByPk(portfolioId);
+		if(portfolioFound === null) throw new Error("Not found");
+
+		const fileName = portfolioFound.dataValues.file_name;
+
 		const portfolioDeleted = await Portfolio.destroy({
 			where: { id: portfolioId },
 		});
@@ -137,6 +144,8 @@ export async function deletePortfolio(
 			success: true,
 			data: portfolioDeleted,
 		});
+
+		await firebase.deleteFile(fileName);
 	} catch (error) {
 		handleServerError(res, error);
 	}

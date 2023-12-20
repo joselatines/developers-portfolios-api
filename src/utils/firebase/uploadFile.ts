@@ -1,10 +1,5 @@
-import app from './firebase'
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
-
-const storage = getStorage(app);
+import { storage } from './connect'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 interface UploadFileParams {
   name: string;
